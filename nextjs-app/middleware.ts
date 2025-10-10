@@ -8,6 +8,16 @@ const publicPaths = ['/unlock', '/embed.js', '/api/health', '/api/chat', '/api/l
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Allow static files and Next.js internals
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/static') ||
+    pathname.includes('.') ||
+    pathname === '/favicon.ico'
+  ) {
+    return NextResponse.next()
+  }
+
   // Allow public paths
   if (publicPaths.some(path => pathname.startsWith(path))) {
     return NextResponse.next()
@@ -34,5 +44,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config_middleware = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }
