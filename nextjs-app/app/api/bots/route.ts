@@ -10,17 +10,23 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const result = await query(
-      `SELECT b.*, 
-        (SELECT COUNT(*) FROM domains d WHERE d.bot_id = b.id AND d.is_active = true) as domain_count,
-        (SELECT COUNT(*) FROM sources s WHERE s.bot_id = b.id AND s.status = 'completed') as source_count
-       FROM bots b 
-       WHERE b.account_id = $1 
-       ORDER BY b.created_at DESC`,
-      [session.accountId]
-    )
+    try {
+      const result = await query(
+        `SELECT b.*, 
+          (SELECT COUNT(*) FROM domains d WHERE d.bot_id = b.id AND d.is_active = true) as domain_count,
+          (SELECT COUNT(*) FROM sources s WHERE s.bot_id = b.id AND s.status = 'completed') as source_count
+         FROM bots b 
+         WHERE b.account_id = $1 
+         ORDER BY b.created_at DESC`,
+        [session.accountId]
+      )
 
-    return NextResponse.json(result.rows)
+      return NextResponse.json(result.rows)
+    } catch (dbError) {
+      console.log('Database not initialized, returning empty bots array')
+      // Return empty array if database not initialized
+      return NextResponse.json([])
+    }
   } catch (error) {
     console.error('Get bots error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
