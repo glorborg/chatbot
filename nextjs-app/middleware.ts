@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
 import { config } from './lib/config'
 
-const publicPaths = ['/unlock', '/embed.js', '/api/health', '/api/chat', '/api/leads', '/api/cron/digest']
+const publicPaths = ['/unlock', '/embed.js', '/api/auth/unlock', '/api/health', '/api/chat', '/api/leads', '/api/cron/digest']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
