@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Supabase client - using REST API instead of direct PostgreSQL
+// Supabase client
 export const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -8,49 +8,54 @@ export const supabase = createClient(
     auth: {
       autoRefreshToken: false,
       persistSession: false
+    },
+    db: {
+      schema: 'public'
     }
   }
 )
 
-// Query wrapper that uses Supabase API
+// Execute raw SQL via Supabase RPC
 export const query = async (text: string, params?: any[]) => {
   const start = Date.now()
   try {
-    // Parse SQL to use Supabase API
-    // This is a simplified adapter - for complex queries, we'd need more logic
-    console.log('Executing via Supabase API:', text.substring(0, 100))
-    
-    // For SELECT queries
-    if (text.trim().toUpperCase().startsWith('SELECT')) {
-      // Extract table name from SQL (basic parsing)
-      const tableMatch = text.match(/FROM\s+(\w+)/i)
-      if (tableMatch) {
-        const table = tableMatch[1]
-        const { data, error } = await supabase.from(table).select('*')
-        if (error) throw error
-        
-        const duration = Date.now() - start
-        console.log('Query executed', { duration, rows: data?.length || 0 })
-        return { rows: data || [], rowCount: data?.length || 0 }
-      }
+    // Replace $1, $2, etc. with actual values for Supabase
+    let finalQuery = text
+    if (params && params.length > 0) {
+      params.forEach((param, index) => {
+        const value = typeof param === 'string' ? `'${param.replace(/'/g, "''")}'` : param
+        finalQuery = finalQuery.replace(new RegExp(`\\$${index + 1}`, 'g'), String(value))
+      })
     }
     
-    // For INSERT queries - will be handled by individual routes
-    // For now, return empty result for unsupported queries
-    return { rows: [], rowCount: 0 }
+    console.log('Executing SQL:', finalQuery.substring(0, 150))
     
-  } catch (error) {
-    console.error('Query error:', error)
+    // Use Supabase's RPC to execute raw SQL
+    const { data, error } = await supabase.rpc('exec_sql', { query: finalQuery })
+    
+    if (error) {
+      console.error('SQL Error:', error)
+      throw error
+    }
+    
+    const duration = Date.now() - start
+    console.log('Query executed', { duration, rows: data?.length || 0 })
+    
+    return { 
+      rows: Array.isArray(data) ? data : (data ? [data] : []), 
+      rowCount: Array.isArray(data) ? data.length : (data ? 1 : 0)
+    }
+  } catch (error: any) {
+    console.error('Query error:', error.message || error)
     throw error
   }
 }
 
 export const getClient = async () => {
-  // Return a mock client since we're using Supabase API
   return {
     query,
     release: () => {},
   }
 }
 
-export default { query }
+export default { query, supabase }
