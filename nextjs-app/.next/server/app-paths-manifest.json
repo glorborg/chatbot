@@ -1,1 +1,6 @@
-{}
+{
+  "/unlock/page": "app/unlock/page.js",
+  "/api/auth/unlock/route": "app/api/auth/unlock/route.js",
+  "/api/bots/route": "app/api/bots/route.js",
+  "/(dashboard)/bots/page": "app/(dashboard)/bots/page.js"
+}
