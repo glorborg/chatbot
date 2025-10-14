@@ -1,4 +1,3 @@
 {
-  "/unlock/page": "app/unlock/page.js",
-  "/api/auth/unlock/route": "app/api/auth/unlock/route.js"
+  "/unlock/page": "app/unlock/page.js"
 }
