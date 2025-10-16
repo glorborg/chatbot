@@ -733,6 +733,9 @@ video {
 .w-8 {
   width: 2rem;
 }
+.w-screen {
+  width: 100vw;
+}
 .max-w-md {
   max-width: 28rem;
 }
@@ -744,6 +747,9 @@ video {
 }
 .max-w-\[70\%\] {
   max-width: 70%;
+}
+.max-w-\[75\%\] {
+  max-width: 75%;
 }
 .flex-1 {
   flex: 1 1 0%;
@@ -911,6 +917,10 @@ video {
 .border-transparent {
   border-color: transparent;
 }
+.border-slate-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(203 213 225 / var(--tw-border-opacity, 1));
+}
 .bg-background {
   background-color: hsl(var(--background));
 }
@@ -1029,6 +1039,10 @@ video {
 .py-2\.5 {
   padding-top: 0.625rem;
   padding-bottom: 0.625rem;
+}
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 .pr-8 {
   padding-right: 2rem;
@@ -1179,6 +1193,11 @@ video {
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+.shadow-md {
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
 .outline {
   outline-style: solid;
 }
@@ -1310,6 +1329,10 @@ video {
 
 .focus\:ring-ring:focus {
   --tw-ring-color: hsl(var(--ring));
+}
+
+.focus\:ring-primary:focus {
+  --tw-ring-color: hsl(var(--primary));
 }
 
 .focus\:ring-offset-2:focus {
